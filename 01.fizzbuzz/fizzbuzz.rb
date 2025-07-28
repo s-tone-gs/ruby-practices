@@ -1,12 +1,11 @@
 (1..20).to_a.each do |number|
-  case 
-  when number % 15 == 0
-    puts "FizzBuzz"
-  when number % 5 == 0
-    puts "Buzz"
-  when number % 3 == 0
-    puts "Fizz"
+  if (number % 15).zero?
+    puts 'FizzBuzz'
+  elsif (number % 5).zero?
+    puts 'Buzz'
+  elsif (number % 3).zero?
+    puts 'Fizz'
   else
     puts number
   end
-end  
+end
