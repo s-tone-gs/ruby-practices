@@ -46,8 +46,8 @@ end
 
 # カレンダーデータをもとにカレンダーを表示
 def make_calendar(year, months, month, calendar)
-  printf('%8s', year)
-  printf("%8s\n", months[month])
+  printf('%8s', months[month])
+  printf("%8s\n", year)
   calendar.each do |x|
     x.each do |y|
       printf('%3s', y.to_s)
