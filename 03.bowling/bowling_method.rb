@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def strings_to_numbers(scores)
   converted_array = []
   scores.each do |score|
@@ -57,4 +59,3 @@ def sum_score(frames)
   end
   total_score
 end
-
