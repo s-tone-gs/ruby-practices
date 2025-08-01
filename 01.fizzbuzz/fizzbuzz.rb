@@ -1,4 +1,4 @@
-(1..20).to_a.each do |number|
+(1..20).each do |number|
   if (number % 15).zero?
     puts 'FizzBuzz'
   elsif (number % 5).zero?
