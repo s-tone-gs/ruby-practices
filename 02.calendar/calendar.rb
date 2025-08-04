@@ -18,11 +18,11 @@ end
 
 inputs = ARGV.getopts('y:', 'm:')
 check_inputs(inputs)
-year = inputs['y'].nil? ? Date.today.year : inputs['y'].to_i
-month = inputs['m'].nil? ? Date.today.month : inputs['m'].to_i
+YEAR = inputs['y'].nil? ? Date.today.year : inputs['y'].to_i
+MONTH = inputs['m'].nil? ? Date.today.month : inputs['m'].to_i
 # ネストされた配列の値を呼び出す際にエラーが起こらないように空配列をセットしてある
 calendar = [%w[Su Mo Tu We Th Fr Sa], []]
-months = { 1 => 'January',
+MONTHS = { 1 => 'January',
            2 => 'February',
            3 => 'March',
            4 => 'April',
@@ -63,5 +63,5 @@ def print_calendar(year, months, month, calendar)
   end
 end
 
-calendar = generate_calendar_data(year, month, calendar)
-print_calendar(year, months, month, calendar) 
+calendar = generate_calendar_data(YEAR, MONTH, calendar)
+print_calendar(YEAR, MONTHS, MONTH, calendar) 
