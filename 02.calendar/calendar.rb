@@ -36,7 +36,7 @@ months = { 1 => 'January',
            12 => 'December' }
 
 # カレンダーのデータを作成
-def make_calendar_data(year, month, calendar)
+def generate_calendar_data(year, month, calendar)
   week_number = 1
   first_day = Date.new(year, month, 1)
   last_day = Date.new(year, month, -1)
@@ -52,7 +52,7 @@ def make_calendar_data(year, month, calendar)
 end
 
 # カレンダーデータをもとにカレンダーを表示
-def make_calendar(year, months, month, calendar)
+def print_calendar(year, months, month, calendar)
   printf('%8s', months[month])
   printf("%8s\n", year)
   calendar.each do |x|
@@ -63,5 +63,5 @@ def make_calendar(year, months, month, calendar)
   end
 end
 
-calendar = make_calendar_data(year, month, calendar)
-make_calendar(year, months, month, calendar) 
+calendar = generate_calendar_data(year, month, calendar)
+print_calendar(year, months, month, calendar) 
