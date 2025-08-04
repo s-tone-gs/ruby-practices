@@ -55,9 +55,9 @@ end
 def print_calendar(year, months, month, calendar)
   printf('%8s', months[month])
   printf("%8s\n", year)
-  calendar.each do |x|
-    x.each do |y|
-      printf('%3s', y.to_s)
+  calendar.each do |row|
+    row.each do |cell|
+      printf('%3s', cell.to_s)
     end
     puts ''
   end
