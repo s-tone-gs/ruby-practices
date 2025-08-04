@@ -38,9 +38,9 @@ months = { 1 => 'January',
 # カレンダーのデータを作成
 def make_calendar_data(year, month, calendar)
   week_number = 1
-  first_day = Date.new(year, month, 1).day
-  last_day = Date.new(year, month, -1).day
-  (first_day..last_day).to_a.each do |day|
+  first_day = Date.new(year, month, 1)
+  last_day = Date.new(year, month, -1)
+  (first_day.day..last_day.day).to_a.each do |day|
     date = Date.new(year, month, day)
     calendar[week_number][date.wday] = day
     if date.wday == 6
