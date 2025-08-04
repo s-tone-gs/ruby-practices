@@ -6,9 +6,16 @@ require 'optparse'
 def check_inputs(inputs)
   year = inputs['y']
   month = inputs['m']
-  raise '-yの引数には1873以上の数値を入力してください' if !year.nil? && year.to_i < 1873
-  raise '-mの引数には1から12の数値を入力してください' if !month.nil? && !month.to_i.between?(1, 12)
+  if !year.nil? && year.to_i < 1873
+    puts '-yの引数には1873以上の数値を入力してください'
+    exit(1)
+  end
+  if !month.nil? && !month.to_i.between?(1,12)
+    puts '-mの引数には1から12の数値を入力してください'
+    exit(1)
+  end
 end
+
 inputs = ARGV.getopts('y:', 'm:')
 check_inputs(inputs)
 year = inputs['y'].nil? ? Date.today.year : inputs['y'].to_i
