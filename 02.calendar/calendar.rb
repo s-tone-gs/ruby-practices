@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 require 'date'
 require 'optparse'
+require 'debug'
 
 # 入力データのチェック
 def check_inputs(inputs)
@@ -20,8 +21,7 @@ inputs = ARGV.getopts('y:', 'm:')
 check_inputs(inputs)
 YEAR = inputs['y'].nil? ? Date.today.year : inputs['y'].to_i
 MONTH = inputs['m'].nil? ? Date.today.month : inputs['m'].to_i
-# ネストされた配列の値を呼び出す際にエラーが起こらないように空配列をセットしてある
-calendar = [%w[Su Mo Tu We Th Fr Sa], []]
+WEEKS = %w[Su Mo Tu We Th Fr Sa] 
 MONTHS = { 1 => 'January',
            2 => 'February',
            3 => 'March',
@@ -34,28 +34,32 @@ MONTHS = { 1 => 'January',
            10 => 'October',
            11 => 'November',
            12 => 'December' }
+# 出力する際に週と日付が同じ配列にあったほうが出力が楽であるため週と日を一緒にしてある
+calendar = {:year => YEAR, :month => MONTHS[MONTH], :weeks_and_days => []}
 
-# カレンダーのデータを作成
-def generate_calendar_data(year, month, calendar)
+def get_days(year, month)
   week_number = 1
+  # 呼び出す際にエラーにならないように空配列を入れてある
+  days = [[]]
   first_day = Date.new(year, month, 1)
   last_day = Date.new(year, month, -1)
   (first_day.day..last_day.day).each do |day|
     date = Date.new(year, month, day)
-    calendar[week_number][date.wday] = day
+    # 第1週はdaysのインデックス0に格納、のように週番号とインデックスがずれるため-1という処理を行っている
+    days[week_number - 1][date.wday] = day
     if date.wday == 6
-      calendar.push([])
+      days.push([])
       week_number += 1
     end
   end
-  return calendar
+  return days
 end
 
 # カレンダーデータをもとにカレンダーを表示
-def print_calendar(year, months, month, calendar)
-  printf('%8s', months[month])
-  printf("%8s\n", year)
-  calendar.each do |row|
+def print_calendar(calendar)
+  printf('%8s', calendar[:month])
+  printf("%8s\n", calendar[:year])
+  calendar[:weeks_and_days].each do |row|
     row.each do |cell|
       printf('%3s', cell.to_s)
     end
@@ -63,5 +67,6 @@ def print_calendar(year, months, month, calendar)
   end
 end
 
-calendar = generate_calendar_data(YEAR, MONTH, calendar)
-print_calendar(YEAR, MONTHS, MONTH, calendar) 
+calendar[:weeks_and_days] = get_days(YEAR, MONTH)
+calendar[:weeks_and_days].unshift(WEEKS)
+print_calendar(calendar) 
