@@ -1,7 +1,6 @@
 #! /usr/bin/env ruby
 require 'date'
 require 'optparse'
-require 'debug'
 
 # 入力データのチェック
 def check_inputs(inputs)
