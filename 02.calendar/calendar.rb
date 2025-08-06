@@ -34,7 +34,7 @@ MONTHS = { 1 => 'January',
            11 => 'November',
            12 => 'December' }
 # 出力する際に週と日付が同じ配列にあったほうが出力が楽であるため週と日を一緒にしてある
-calendar = {:year => YEAR, :month => MONTHS[MONTH], :weeks_and_days => []}
+calendar = {:year => YEAR, :month => MONTHS[MONTH], :weeks_and_days => [WEEKS]}
 
 def get_days(year, month)
   week_number = 1
@@ -66,6 +66,7 @@ def print_calendar(calendar)
   end
 end
 
-calendar[:weeks_and_days] = get_days(YEAR, MONTH)
-calendar[:weeks_and_days].unshift(WEEKS)
+get_days(YEAR, MONTH).each do |days|
+  calendar[:weeks_and_days].push(days)
+end
 print_calendar(calendar) 
