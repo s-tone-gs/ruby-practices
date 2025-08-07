@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-def strings_to_numbers(scores)
+def to_int_scores(strings_scores)
   converted_array = []
-  scores.each do |score|
+  strings_scores.each do |score|
     if score == 'X'
       converted_array << 10
       converted_array << 0
@@ -13,11 +13,11 @@ def strings_to_numbers(scores)
   converted_array
 end
 
-def format_score(raw_scores)
+def parse_scores(raw_scores)
   scores = raw_scores.split(',')
-  integer_scores = strings_to_numbers(scores)
+  int_scores = to_int_scores(scores)
   # 10フレーム目でストライクかスペアを出すとframesの要素数が10以上になる。こうすることで10フレーム目のストライク、スペアの得点加算も通常と同じ処理で済むのでこの形にしてある
-  integer_scores.each_slice(2).to_a
+  int_scores.each_slice(2).to_a
 end
 
 def strike?(frame)
