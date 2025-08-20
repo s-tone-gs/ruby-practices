@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
 require_relative 'file'
+require 'debug'
 
 NUMBER_OF_COLUMNS = 3
+COLORS = {
+  directory: '34m',
+  symlink: '96m',
+  broken: '91m',
+  exe: '92m',
+  file: '37m'
+}.freeze
 
 def exit_if_not_exist(path)
   puts "ls: cannot access '#{path}': No such file or directory"
@@ -21,7 +29,8 @@ end
 
 def get_files(path)
   Dir.glob('*', base: path).map do |file_name|
-    LS::File.new(file_name, File::Stat.new(path + file_name))
+    file_path = path + file_name
+    LS::File.new(file_name, file_path, File.lstat(file_path))
   end
 end
 
@@ -42,12 +51,28 @@ def calculation_output_width(build_files)
   max_length + 2
 end
 
+def prepare_output(file, width)
+  file_type = if file.directory?
+                :directory
+              elsif file.symlink?
+                if File.exist?(file.path)
+                  :symlink
+                else
+                  :broken
+                end
+              elsif file.executable?
+                :exe
+              else
+                :file
+              end
+  "\e[#{COLORS[file_type]}#{file.name.ljust(width)}\e[0m"
+end
+
 def print_files(build_files)
   output_width = calculation_output_width(build_files)
   build_files.each do |files|
     files.compact.each do |file|
-      output = file.name.ljust(output_width)
-      print file.directory? ? "\e[34m#{output}\e[0m" : output
+      print prepare_output(file, output_width)
     end
     puts ''
   end
