@@ -2,6 +2,8 @@
 
 require_relative 'file'
 
+NUMBER_OF_COLUMNS = 3
+
 def exit_if_not_exist(path)
   puts "ls: cannot access '#{path}': No such file or directory"
   exit(1)
@@ -24,10 +26,9 @@ def get_files(path)
 end
 
 def build_files(files)
-  number_of_columns = 3
-  number_of_rows = files.size < number_of_columns ? 1 : (files.size.to_f / number_of_columns).ceil
+  number_of_rows = files.size < NUMBER_OF_COLUMNS ? 1 : (files.size.to_f / NUMBER_OF_COLUMNS).ceil
   rows = Array.new(number_of_rows) { [] }
-  number_of_columns.times do
+  NUMBER_OF_COLUMNS.times do
     number_of_rows.times do |row_number|
       rows[row_number].push(files.shift)
     end
