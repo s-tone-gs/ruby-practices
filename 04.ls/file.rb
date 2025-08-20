@@ -22,9 +22,5 @@ module LS
     def executable?
       @file_state_instance.executable?
     end
-
-    def world_writable?
-      @file_state_instance.world_writable?
-    end
   end
 end
