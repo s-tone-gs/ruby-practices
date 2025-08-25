@@ -7,7 +7,7 @@ def main
            './'
          else
            exit_if_not_exist(ARGV[0]) unless FileTest.exist?(ARGV[0])
-           exit_file_is_ture(ARGV[0]) if FileTest.file?(ARGV[0])
+           exit_file_is_true(ARGV[0]) if FileTest.file?(ARGV[0])
            # ディレクトリの記述が/で終わっているかいないかで分岐
            %r{\S*/$}.match?(ARGV[0]) ? ARGV[0] : "#{ARGV[0]}/"
          end

@@ -17,7 +17,7 @@ def exit_if_not_exist(path)
   exit(1)
 end
 
-def exit_file_is_ture(path)
+def exit_file_is_true(path)
   puts path
   exit(0)
 end
