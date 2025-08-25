@@ -35,7 +35,7 @@ def get_files(path)
 end
 
 def build_files(files)
-  number_of_rows = files.size < NUMBER_OF_COLUMNS ? 1 : (files.size.to_f / NUMBER_OF_COLUMNS).ceil
+  number_of_rows = files.size < NUMBER_OF_COLUMNS ? 1 : files.size.ceildiv(NUMBER_OF_COLUMNS)
   rows = Array.new(number_of_rows) { [] }
   NUMBER_OF_COLUMNS.times do
     number_of_rows.times do |row_number|
