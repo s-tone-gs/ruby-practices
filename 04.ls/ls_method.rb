@@ -30,7 +30,7 @@ end
 def get_files(path)
   Dir.glob('*', base: path).map do |file_name|
     file_path = path + file_name
-    LS::File.new(file_name, file_path, File.lstat(file_path))
+    LS::File.new(file_name, file_path)
   end
 end
 
