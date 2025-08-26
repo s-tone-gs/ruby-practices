@@ -2,6 +2,7 @@
 
 require_relative 'file'
 require 'debug'
+require 'optparse'
 
 NUMBER_OF_COLUMNS = 3
 COLORS = {
@@ -11,6 +12,14 @@ COLORS = {
   exe: '92m',
   file: '37m'
 }.freeze
+
+def option_and_path(arguments)
+  opt = OptionParser.new
+  all = false
+  opt.on('-a') { |v| all = v }
+  paths = opt.parse(arguments)
+  { all: all, path: paths }
+end
 
 def exit_if_not_exist(path)
   puts "ls: cannot access '#{path}': No such file or directory"
@@ -27,8 +36,9 @@ def exit_if_file_not_found
   exit(0)
 end
 
-def get_files(path)
-  Dir.glob('*', base: path).map do |file_name|
+def get_files(path, all)
+  flags = all ? File::FNM_DOTMATCH : 0
+  Dir.glob('*', flags, base: path).map do |file_name|
     file_path = path + file_name
     LS::File.new(file_name, file_path)
   end
