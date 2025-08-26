@@ -46,9 +46,8 @@ def build_files(files)
 end
 
 def calculation_output_width(build_files)
-  file_names = build_files.flatten.compact.map(&:name)
-  max_length = file_names.max_by(&:length).length
-  max_length + 2
+  longest_filename_length = build_files.flatten.compact.map { |f| f.name.length }.max
+  longest_filename_length + 2
 end
 
 def prepare_output(file, width)
@@ -77,4 +76,3 @@ def print_files(build_files)
     puts ''
   end
 end
-
