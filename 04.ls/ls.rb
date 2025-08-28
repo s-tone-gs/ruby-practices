@@ -3,7 +3,7 @@
 require_relative 'ls_method'
 
 def main
-  option_and_path(ARGV) => { all: all, path: paths }
+  option_and_path(ARGV) => { all: all, reverse: reverse, path: paths }
   path = if paths[0].nil?
            './'
          else
@@ -15,6 +15,7 @@ def main
 
   files = get_files(path, all)
   exit_if_file_not_found if files.empty?
+  files.reverse! if reverse
   build_files = build_files(files)
   print_files(build_files)
 end

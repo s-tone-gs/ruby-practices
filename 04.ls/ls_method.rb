@@ -16,9 +16,11 @@ COLORS = {
 def option_and_path(arguments)
   opt = OptionParser.new
   all = false
+  reverse = false
   opt.on('-a') { |v| all = v }
+  opt.on('-r') { |v| reverse = v }
   paths = opt.parse(arguments)
-  { all: all, path: paths }
+  { all: all, reverse: reverse, path: paths }
 end
 
 def exit_if_not_exist(path)
