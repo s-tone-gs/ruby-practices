@@ -20,7 +20,7 @@ def option_and_path(arguments)
   opt.on('-a') { |v| all = v }
   opt.on('-r') { |v| reverse = v }
   paths = opt.parse(arguments)
-  { all: all, reverse: reverse, path: paths }
+  { all: all, reverse: reverse, paths: paths }
 end
 
 def exit_if_not_exist(path)

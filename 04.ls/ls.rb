@@ -3,8 +3,8 @@
 require_relative 'ls_method'
 
 def main
-  option_and_path(ARGV) => { all: all, reverse: reverse, path: paths }
-  path = if paths[0].nil?
+  option_and_path(ARGV) => { all: all, reverse: reverse, paths: paths }
+  target_path = if paths[0].nil?
            './'
          else
            exit_if_not_exist(paths[0]) unless FileTest.exist?(paths[0])
@@ -13,7 +13,7 @@ def main
            %r{\S*/$}.match?(paths[0]) ? paths[0] : "#{paths[0]}/"
          end
 
-  files = get_files(path, all)
+  files = get_files(target_path, all)
   exit_if_file_not_found if files.empty?
   files.reverse! if reverse
   build_files = build_files(files)
