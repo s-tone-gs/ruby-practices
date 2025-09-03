@@ -88,7 +88,7 @@ def calculate_list_width(files)
     widths[:mtime].push(f.mtime.length)
     widths[:name].push(f.name.length)
   end
-  widths.transform_values { |widths| widths.max }
+  widths.transform_values { |widths| widths.max + 1 }
 end
 
 def calculate_default_width(files)
@@ -118,10 +118,10 @@ def list_output(file, widths)
   file_type = check_file_type(file)
   output = <<~OUTPUT
     #{file.str_mode}#{file.nlink.rjust(widths[:nlink])}
-     #{file.owner.name.rjust(widths[:owner])}
-     #{file.group.name.rjust(widths[:group])}
-     #{file.size.rjust(widths[:size])}
-     #{file.mtime.rjust(widths[:mtime])}
+    #{file.owner.name.rjust(widths[:owner])}
+    #{file.group.name.rjust(widths[:group])}
+    #{file.size.rjust(widths[:size])}
+    #{file.mtime.rjust(widths[:mtime])}
      \e[#{COLORS[file_type]}#{file.name.ljust(widths[:name])}\e[0m
   OUTPUT
   output.delete("/\n/")
