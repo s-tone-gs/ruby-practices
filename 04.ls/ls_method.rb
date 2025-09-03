@@ -4,7 +4,7 @@ require_relative 'file'
 require 'debug'
 require 'optparse'
 
-NUMBER_OF_COLUMNS = 3
+DEFAULT_COLUMN_COUNT = 3
 COLORS = {
   directory: '34m',
   symlink: '96m',
@@ -49,7 +49,7 @@ def get_files(path, all)
 end
 
 def build_files(list, files)
-  number_of_columns = list ? 1 : NUMBER_OF_COLUMNS
+  number_of_columns = list ? 1 : DEFAULT_COLUMN_COUNT
   number_of_rows = files.size < number_of_columns ? 1 : files.size.ceildiv(number_of_columns)
   rows = Array.new(number_of_rows) { [] }
   number_of_columns.times do
