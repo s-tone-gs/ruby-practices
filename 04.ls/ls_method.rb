@@ -102,19 +102,11 @@ def calculate_total_blocks(files)
 end
 
 def check_file_type(file)
-  if file.directory?
-    :directory
-  elsif file.symlink?
-    if File.exist?(file.path)
-      :symlink
-    else
-      :broken
-    end
-  elsif file.executable?
-    :exe
-  else
-    :file
-  end
+  return :directory if file.directory?
+  return :symlink if file.symlink? && File.exist?(file.path)
+  return :broken if file.symlink? && !File.exist?(file.path)
+  return :exe if file.executable?
+  :file
 end
 
 def default_output(file, widths)
