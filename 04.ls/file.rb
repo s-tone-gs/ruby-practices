@@ -35,7 +35,7 @@ module LS
 
     def str_mode
       int_mode = mode.to_s(8).rjust(6, '0')
-      FILE_TYPES[int_mode[0..1]] + [int_mode[3], int_mode[4], int_mode[5]].sum('') { |mode| PERMISSIONS[mode] }
+      FILE_TYPES[int_mode[0..1]] + int_mode[3..5].chars.map { |mode| PERMISSIONS[mode] }.join
     end
 
     def nlink
