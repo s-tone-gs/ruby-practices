@@ -71,15 +71,24 @@ def get_widths_and_puts_total(list, files)
 end
 
 def calculate_list_width(files)
-  widths = {}
+  widths = {
+    owner: [],
+    group: [],
+    nlink: [],
+    size: [],
+    mtime: [],
+    name: [],
+  }
   # それぞれの処理の結合度を落とす目的で冗長にしている
-  widths[:owner] = files.map { |f| f.owner.name.length }.max + 1
-  widths[:group] = files.map { |f| f.group.name.length }.max + 1
-  widths[:nlink] = files.map { |f| f.nlink.length }.max + 1
-  widths[:size] = files.map { |f| f.size.length }.max + 1
-  widths[:mtime] = files.map { |f| f.mtime.length }.max + 1
-  widths[:name] = files.map { |f| f.name.length }.max
-  widths
+  files.each do |f|
+    widths[:owner].push(f.owner.name.length)
+    widths[:group].push(f.group.name.length)
+    widths[:nlink].push(f.nlink.length)
+    widths[:size].push(f.size.length)
+    widths[:mtime].push(f.mtime.length)
+    widths[:name].push(f.name.length)
+  end
+  widths.transform_values { |widths| widths.max }
 end
 
 def calculate_default_width(files)
@@ -117,10 +126,10 @@ def list_output(file, widths)
   file_type = check_file_type(file)
   output = <<~OUTPUT
     #{file.str_mode}#{file.nlink.rjust(widths[:nlink])}
-    #{file.owner.name.rjust(widths[:owner])}
-    #{file.group.name.rjust(widths[:group])}
-    #{file.size.rjust(widths[:size])}
-    #{file.mtime.rjust(widths[:mtime])}
+     #{file.owner.name.rjust(widths[:owner])}
+     #{file.group.name.rjust(widths[:group])}
+     #{file.size.rjust(widths[:size])}
+     #{file.mtime.rjust(widths[:mtime])}
      \e[#{COLORS[file_type]}#{file.name.ljust(widths[:name])}\e[0m
   OUTPUT
   output.delete("/\n/")
