@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'file'
-require 'debug'
 require 'optparse'
 
 DEFAULT_COLUMN_COUNT = 3
@@ -23,6 +22,15 @@ def option_and_path(arguments)
   opt.on('-l') { |v| list = v }
   paths = opt.parse(arguments)
   { all:, reverse:, list:, paths: }
+end
+
+def check_path(paths)
+  return './' if paths[0].nil?
+
+  exit_if_not_exist(paths[0]) unless FileTest.exist?(paths[0])
+  exit_file_is_true(paths[0]) if FileTest.file?(paths[0])
+  # ディレクトリの記述が/で終わっているかいないかで分岐
+  %r{\S*/$}.match?(paths[0]) ? paths[0] : "#{paths[0]}/"
 end
 
 def exit_if_not_exist(path)
