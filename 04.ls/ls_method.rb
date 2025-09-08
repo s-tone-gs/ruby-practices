@@ -40,46 +40,54 @@ def exit_if_file_not_found
   exit(0)
 end
 
-def get_files(path, all)
+def get_files(path, all, reverse)
   flags = all ? File::FNM_DOTMATCH : 0
-  Dir.glob('*', flags, base: path).map do |file_name|
+  files = Dir.glob('*', flags, base: path).map do |file_name|
     file_path = path + file_name
     LS::File.new(file_name, file_path)
   end
+  exit_if_file_not_found if files.empty?
+  files.reverse! if reverse
+  files
 end
 
-def build_files(list, files)
-  number_of_columns = list ? 1 : DEFAULT_COLUMN_COUNT
-  number_of_rows = files.size < number_of_columns ? 1 : files.size.ceildiv(number_of_columns)
-  rows = Array.new(number_of_rows) { [] }
-  number_of_columns.times do
-    number_of_rows.times do |row_number|
-      rows[row_number].push(files.shift)
+def print_files(files, list)
+  if list
+    list_files = build_files(files, column_count: 1)
+    list_widths = calculate_list_width(files)
+    puts "total #{calculate_total_blocks(files)}"
+    list_files.each do |files|
+      files.compact.each do |file|
+        print list_output(file, list_widths)
+      end
+      puts ''
+    end
+  else
+    default_files = build_files(files)
+    default_widths = calculate_default_width(files)
+    default_files.each do |files|
+      files.compact.each do |file|
+        print default_output(file, default_widths)
+      end
+      puts ''
+    end
+  end
+end
+
+def build_files(files, column_count: DEFAULT_COLUMN_COUNT)
+  row_count = files.size < column_count ? 1 : files.size.ceildiv(column_count)
+  copy_files = files.map { |file| file }
+  rows = Array.new(row_count) { [] }
+  column_count.times do
+    row_count.times do |row_number|
+      rows[row_number].push(copy_files.shift)
     end
   end
   rows
 end
 
-def get_widths_and_puts_total(list, files)
-  if list
-    total_blocks = calculate_total_blocks(files)
-    puts "total #{total_blocks}"
-    calculate_list_width(files)
-  else
-    calculate_default_width(files)
-  end
-end
-
 def calculate_list_width(files)
-  widths = {
-    owner: [],
-    group: [],
-    nlink: [],
-    size: [],
-    mtime: [],
-    name: [],
-  }
-  # それぞれの処理の結合度を落とす目的で冗長にしている
+  widths = Hash.new { |hash, key| hash[key] = [] }
   files.each do |f|
     widths[:owner].push(f.owner.name.length)
     widths[:group].push(f.group.name.length)
@@ -106,6 +114,7 @@ def check_file_type(file)
   return :symlink if file.symlink? && File.exist?(file.path)
   return :broken if file.symlink? && !File.exist?(file.path)
   return :exe if file.executable?
+
   :file
 end
 
@@ -125,17 +134,4 @@ def list_output(file, widths)
      \e[#{COLORS[file_type]}#{file.name.ljust(widths[:name])}\e[0m
   OUTPUT
   output.delete("/\n/")
-end
-
-def print_files(build_files, list, widths)
-  build_files.each do |files|
-    files.compact.each do |file|
-      if list
-        print list_output(file, widths)
-      else
-        print default_output(file, widths)
-      end
-    end
-    puts ''
-  end
 end
