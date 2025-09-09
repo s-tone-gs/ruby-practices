@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'etc'
+
 module LS
   class File
     FILE_TYPES = {
