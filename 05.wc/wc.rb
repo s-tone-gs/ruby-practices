@@ -64,8 +64,12 @@ def calculate_total(totals, outputs)
 end
 
 def display(outputs, flags)
-  outputs.each do |key, value|
-    print "#{value} " if flags[key]
+  # ループ処理にするとflagsとoutputsの要素の順番が同期する必要があるため、今後予期せぬバグに繋がると判断しこのように記述している。
+  outputs.delete(:line) unless flags[:line]
+  outputs.delete(:word) unless flags[:word]
+  outputs.delete(:byte) unless flags[:byte]
+  outputs.each_value do |value|
+    print "#{value} "
   end
   puts ''
 end
@@ -77,7 +81,7 @@ end
 
 get_option_and_paths(ARGV) => { line:, word:, byte:, paths: }
 totals = Hash.new { |h, k| h[k] = 0 }
-output_flags = { line:, word:, byte:, name: true, message: true, error: true }
+output_flags = { line:, word:, byte: }
 if paths.empty?
   stdins = build_stdin_output
   display(stdins, output_flags)
