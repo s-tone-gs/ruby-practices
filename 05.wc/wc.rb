@@ -54,7 +54,7 @@ def build_file_output(path)
   {
     line: content.lines.count,
     word: content.split.count,
-    byte: File.size(path),
+    byte: content.size,
     name: path
   }
 rescue Errno::ENOTDIR
