@@ -85,14 +85,21 @@ def calculate_total(totals, outputs)
   end
 end
 
+def adjust_style(output, key)
+  width = output.to_s.length + 1
+  return "#{output}".rjust(width) if key == :line || :word || :byte
+
+  "#{output}".ljust(width)
+end
+
 def display(outputs, flags)
   filtered_outputs = outputs.reject do |key|
     (key == :line && !flags[:line]) ||
       (key == :word && !flags[:word]) ||
       (key == :byte && !flags[:byte])
   end
-  filtered_outputs.each_value do |value|
-    print "#{value} "
+  filtered_outputs.each do |key, value|
+    print adjust_style(value, key)
   end
   puts ''
 end
