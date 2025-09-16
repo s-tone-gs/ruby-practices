@@ -86,10 +86,11 @@ def calculate_total(totals, outputs)
 end
 
 def adjust_style(output, key)
-  width = output.to_s.length + 1
-  return "#{output}".rjust(width) if key == :line || :word || :byte
+  str_output = output.to_s
+  width = str_output.length + 1
+  return str_output.rjust(width) if key == :line || :word || :byte
 
-  "#{output}".ljust(width)
+  str_output.ljust(width)
 end
 
 def display(outputs, flags)
