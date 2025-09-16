@@ -2,6 +2,28 @@
 
 require 'optparse'
 
+def main
+  get_option_and_paths(ARGV) => { line:, word:, byte:, paths: }
+  totals = Hash.new { |h, k| h[k] = 0 }
+  output_flags = { line:, word:, byte: }
+  if paths.empty?
+    stdins = build_stdin_output
+    display(stdins, output_flags)
+  else
+    paths.each do |path|
+      outputs = {}
+      if File.directory?(path)
+        outputs = build_directory_output(path)
+      else
+        outputs = build_file_output(path)
+        totals = calculate_total(totals, outputs)
+      end
+      display(outputs, output_flags)
+    end
+    display_totals(totals, output_flags) if paths.length > 1
+  end
+end
+
 def get_option_and_paths(arguments)
   line = false
   word = false
@@ -79,22 +101,4 @@ def display_totals(totals, flags)
   display(totals, flags)
 end
 
-get_option_and_paths(ARGV) => { line:, word:, byte:, paths: }
-totals = Hash.new { |h, k| h[k] = 0 }
-output_flags = { line:, word:, byte: }
-if paths.empty?
-  stdins = build_stdin_output
-  display(stdins, output_flags)
-else
-  paths.each do |path|
-    outputs = {}
-    if File.directory?(path)
-      outputs = build_directory_output(path)
-    else
-      outputs = build_file_output(path)
-      totals = calculate_total(totals, outputs)
-    end
-    display(outputs, output_flags)
-  end
-  display_totals(totals, output_flags) if paths.length > 1
-end
+main
