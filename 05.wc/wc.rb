@@ -50,9 +50,10 @@ def build_stdin_output
 end
 
 def build_file_output(path)
+  content = File.read(path)
   {
-    line: File.read(path).lines.count,
-    word: File.read(path).split.count,
+    line: content.lines.count,
+    word: content.split.count,
     byte: File.size(path),
     name: path
   }
