@@ -44,6 +44,16 @@ def display(paths, option_flags)
   end
 end
 
+def set_text_metadata(option_flags, message: nil, input: '', name: nil)
+  {
+    message: message,
+    line_count: option_flags[:line] ? input.lines.count : nil,
+    word_count: option_flags[:word] ? input.split.count : nil,
+    size: option_flags[:byte] ? input.size : nil,
+    name: name
+  }.compact
+end
+
 def build_text_metadata(paths, option_flags)
   text_metadata_collection = paths.map do |path|
     if File.directory?(path)
@@ -59,16 +69,6 @@ def build_text_metadata(paths, option_flags)
   else
     text_metadata_collection
   end
-end
-
-def set_text_metadata(option_flags, message: nil, input: '', name: nil)
-  {
-    message: message,
-    line_count: option_flags[:line] ? input.lines.count : nil,
-    word_count: option_flags[:word] ? input.split.count : nil,
-    size: option_flags[:byte] ? input.size : nil,
-    name: name
-  }.compact
 end
 
 def calculate_total(text_metadata_collection)
