@@ -70,16 +70,16 @@ end
 
 def calculate_output_width(text_metadata_collection, target_options)
   widths = text_metadata_collection.map do |text_metadata|
-    target_options.map do |key|
-      text_metadata[key].to_s.length
+    target_options.map do |option|
+      text_metadata[option].to_s.length
     end
   end
   widths.flatten.max
 end
 
 def render(target_options, text_metadata, width)
-  target_options.each do |key|
-    print "#{text_metadata[key].to_s.rjust(width)} "
+  target_options.each do |option|
+    print "#{text_metadata[option].to_s.rjust(width)} "
   end
   print text_metadata[:name]
   puts ''
