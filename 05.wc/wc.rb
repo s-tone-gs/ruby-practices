@@ -1,23 +1,22 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require 'debug'
 
 def main
-  paths, option_flags = option_and_paths
+  paths, target_options = options_and_paths
   text_metadata_collection =
     if paths.empty?
-      [create_text_metadata(option_flags, input: $stdin.read)]
+      [create_text_metadata(input: $stdin.read)]
     else
-      build_text_metadata(paths, option_flags)
+      build_text_metadata(paths)
     end
-  width = calculate_output_width(text_metadata_collection)
+  width = calculate_output_width(text_metadata_collection, target_options)
   text_metadata_collection.each do |text_metadata|
-    render(text_metadata, width)
+    render(target_options, text_metadata, width)
   end
 end
 
-def option_and_paths
+def options_and_paths
   line = false
   word = false
   size = false
@@ -26,64 +25,68 @@ def option_and_paths
   opt.on('-w') { |v| word = v }
   opt.on('-c') { |v| size = v }
   paths = opt.parse(ARGV)
-  if !line && !word && !size
-    [ paths, { line: true, word: true, size: true} ]
+  target_options = if !line && !word && !size
+    [:line_count, :word_count, :size]
   else
-    [ paths, { line:, word:, size:, paths: } ]
+    {line_count: line, word_count: word, size: size}.map do |option, flag|
+      next unless flag
+      option
+    end
   end
+  [paths, target_options]
 end
 
-def create_text_metadata(option_flags, input: , name: nil)
+def create_text_metadata(input: , name: nil)
   {
-    line_count: option_flags[:line] ? input.lines.count : nil,
-    word_count: option_flags[:word] ? input.split.count : nil,
-    size: option_flags[:size] ? input.size : nil,
+    line_count: input.lines.count,
+    word_count: input.split.count,
+    size: input.size,
     name: name
-  }.compact
+  }
 end
 
-def build_text_metadata(paths, option_flags)
+def build_text_metadata(paths)
   text_metadata_collection = paths.map do |path|
-    create_text_metadata(option_flags, input: File.read(path), name: path)
+    create_text_metadata(input: File.read(path), name: path)
   end
   if text_metadata_collection.length > 1
-    text_metadata_collection + [calculate_total(text_metadata_collection, option_flags)]
+    text_metadata_collection + [calculate_total(text_metadata_collection)]
   else
     text_metadata_collection
   end
 end
 
-def calculate_total(text_metadata_collection, option_flags)
-  line_count_sum = option_flags[:line] ? 0 : nil
-  word_count_sum = option_flags[:word] ? 0 :nil
-  size_sum = option_flags[:size] ? 0 :nil
+def calculate_total(text_metadata_collection)
+  line_count_sum = 0
+  word_count_sum = 0
+  size_sum = 0
   text_metadata_collection.each do |text_metadata|
-    line_count_sum += text_metadata[:line_count] if option_flags[:line]
-    word_count_sum += text_metadata[:word_count] if option_flags[:word]
-    size_sum += text_metadata[:size] if option_flags[:size]
+    line_count_sum += text_metadata[:line_count]
+    word_count_sum += text_metadata[:word_count]
+    size_sum += text_metadata[:size]
   end
-  { line_count: line_count_sum, word_count: word_count_sum, size: size_sum, name: 'total' }.compact
+  { line_count: line_count_sum, word_count: word_count_sum, size: size_sum, name: 'total' }
 end
 
-def calculate_output_width(text_metadata_collection)
+def calculate_output_width(text_metadata_collection, target_options)
   widths = text_metadata_collection.map do |text_metadata|
-    %i[line_count word_count size].map do |key|
+    target_options.map do |key|
       text_metadata[key].to_s.length
     end
   end
   widths.flatten.max  
 end
 
-def render(text_metadata, width)
-  text_metadata.each do |key, data|
-    print adjust_style(data, width, key)
+def render(target_options, text_metadata, width)
+  target_options.each do |key|
+    print adjust_style(text_metadata[key], width)
   end
+  print text_metadata[:name]
   puts ''
 end
 
-def adjust_style(data, width, key)
-  str_data = data.to_s
-  %i[line_count word_count size].include?(key) ? "#{str_data.rjust(width)} " : str_data
+def adjust_style(metadata, width)
+  "#{metadata.to_s.rjust(width)} "
 end
 
 main
