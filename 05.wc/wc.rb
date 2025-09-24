@@ -6,7 +6,7 @@ def main
   paths, option_flags = option_and_paths
   text_metadata_collection =
     if paths.empty?
-      [set_text_metadata(option_flags, input: $stdin.read)]
+      [create_text_metadata(option_flags, input: $stdin.read)]
     else
       build_text_metadata(paths, option_flags)
     end
@@ -32,7 +32,7 @@ def option_and_paths
   end
 end
 
-def set_text_metadata(option_flags, message: nil, input: '', name: nil)
+def create_text_metadata(option_flags, message: nil, input: '', name: nil)
   {
     message: message,
     line_count: option_flags[:line] ? input.lines.count : nil,
@@ -45,11 +45,11 @@ end
 def build_text_metadata(paths, option_flags)
   text_metadata_collection = paths.map do |path|
     if File.directory?(path)
-      set_text_metadata(option_flags, message: "wc: #{path}: Is a directory\n", name: path)
+      create_text_metadata(option_flags, message: "wc: #{path}: Is a directory\n", name: path)
     elsif !File.exist?(path)
       %r{/$}.match?(path) ? { error: "wc: #{path}: Not a directory" } : { error: "wc: #{path}: No such file or directory" }
     else
-      set_text_metadata(option_flags, input: File.read(path), name: path)
+      create_text_metadata(option_flags, input: File.read(path), name: path)
     end
   end
   if text_metadata_collection.length > 1
