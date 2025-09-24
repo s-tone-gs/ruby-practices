@@ -25,18 +25,18 @@ def options_and_paths
   opt.on('-w') { |v| word = v }
   opt.on('-c') { |v| size = v }
   paths = opt.parse(ARGV)
-  target_options = if !line && !word && !size
-    [:line_count, :word_count, :size]
-  else
-    {line_count: line, word_count: word, size: size}.map do |option, flag|
-      next unless flag
-      option
+  target_options =
+    if [line, word, size].none?
+      %i[line_count word_count size]
+    else
+      { line_count: line, word_count: word, size: size }.map do |option, flag|
+        option if flag
+      end.compact
     end
-  end
   [paths, target_options]
 end
 
-def create_text_metadata(input: , name: nil)
+def create_text_metadata(input:, name: nil)
   {
     line_count: input.lines.count,
     word_count: input.split.count,
@@ -74,19 +74,15 @@ def calculate_output_width(text_metadata_collection, target_options)
       text_metadata[key].to_s.length
     end
   end
-  widths.flatten.max  
+  widths.flatten.max
 end
 
 def render(target_options, text_metadata, width)
   target_options.each do |key|
-    print adjust_style(text_metadata[key], width)
+    print "#{text_metadata[key].to_s.rjust(width)} "
   end
   print text_metadata[:name]
   puts ''
-end
-
-def adjust_style(metadata, width)
-  "#{metadata.to_s.rjust(width)} "
 end
 
 main
