@@ -6,17 +6,9 @@ def main
   paths, option_flags = option_and_paths
   text_metadata_collection =
     if paths.empty?
-      [
-        set_text_metadata(
-          option_flags,
-          input: $stdin.read
-        )
-      ]
+      [set_text_metadata(option_flags, input: $stdin.read)]
     else
-      build_text_metadata(
-        paths,
-        option_flags
-      )
+      build_text_metadata(paths, option_flags)
     end
   width = calculate_output_width(text_metadata_collection)
   text_metadata_collection.each do |text_metadata|
