@@ -32,9 +32,8 @@ def option_and_paths
   end
 end
 
-def create_text_metadata(option_flags, message: nil, input: '', name: nil)
+def create_text_metadata(option_flags, input: , name: nil)
   {
-    message: message,
     line_count: option_flags[:line] ? input.lines.count : nil,
     word_count: option_flags[:word] ? input.split.count : nil,
     size: option_flags[:byte] ? input.size : nil,
@@ -44,13 +43,7 @@ end
 
 def build_text_metadata(paths, option_flags)
   text_metadata_collection = paths.map do |path|
-    if File.directory?(path)
-      create_text_metadata(option_flags, message: "wc: #{path}: Is a directory\n", name: path)
-    elsif !File.exist?(path)
-      %r{/$}.match?(path) ? { error: "wc: #{path}: Not a directory" } : { error: "wc: #{path}: No such file or directory" }
-    else
-      create_text_metadata(option_flags, input: File.read(path), name: path)
-    end
+    create_text_metadata(option_flags, input: File.read(path), name: path)
   end
   if text_metadata_collection.length > 1
     text_metadata_collection + [calculate_total(text_metadata_collection)]
