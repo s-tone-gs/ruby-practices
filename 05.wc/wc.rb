@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'debug'
 
 def main
   paths, option_flags = option_and_paths
@@ -65,11 +66,12 @@ def calculate_total(text_metadata_collection, option_flags)
 end
 
 def calculate_output_width(text_metadata_collection)
-  text_metadata_collection.each_with_object([]) do |text_metadata, widths|
-    %i[line_count word_count size].each do |key|
-      widths << text_metadata[key].to_s.length
+  widths = text_metadata_collection.map do |text_metadata|
+    %i[line_count word_count size].map do |key|
+      text_metadata[key].to_s.length
     end
-  end.compact.max
+  end
+  widths.flatten.max  
 end
 
 def render(text_metadata, width)
@@ -81,9 +83,7 @@ end
 
 def adjust_style(data, width, key)
   str_data = data.to_s
-  return "#{str_data.rjust(width)} " if %i[line_count word_count size].include?(key)
-
-  str_data.ljust(width)
+  %i[line_count word_count size].include?(key) ? "#{str_data.rjust(width)} " : str_data
 end
 
 main
