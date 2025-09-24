@@ -3,7 +3,7 @@
 require 'optparse'
 
 def main
-  option_and_paths => { paths:, **option_flags }
+  paths, option_flags = option_and_paths
   display(paths, option_flags)
 end
 
@@ -17,9 +17,9 @@ def option_and_paths
   opt.on('-c') { |v| byte = v }
   paths = opt.parse(ARGV)
   if !line && !word && !byte
-    { line: true, word: true, byte: true, paths: }
+    [ paths, { line: true, word: true, byte: true} ]
   else
-    { line:, word:, byte:, paths: }
+    [ paths, { line:, word:, byte:, paths: } ]
   end
 end
 
