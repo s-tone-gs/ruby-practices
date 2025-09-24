@@ -4,26 +4,6 @@ require 'optparse'
 
 def main
   paths, option_flags = option_and_paths
-  display(paths, option_flags)
-end
-
-def option_and_paths
-  line = false
-  word = false
-  byte = false
-  opt = OptionParser.new
-  opt.on('-l') { |v| line = v }
-  opt.on('-w') { |v| word = v }
-  opt.on('-c') { |v| byte = v }
-  paths = opt.parse(ARGV)
-  if !line && !word && !byte
-    [ paths, { line: true, word: true, byte: true} ]
-  else
-    [ paths, { line:, word:, byte:, paths: } ]
-  end
-end
-
-def display(paths, option_flags)
   text_metadata_collection =
     if paths.empty?
       [
@@ -41,6 +21,22 @@ def display(paths, option_flags)
   width = calculate_output_width(text_metadata_collection)
   text_metadata_collection.each do |text_metadata|
     render(text_metadata, width)
+  end
+end
+
+def option_and_paths
+  line = false
+  word = false
+  byte = false
+  opt = OptionParser.new
+  opt.on('-l') { |v| line = v }
+  opt.on('-w') { |v| word = v }
+  opt.on('-c') { |v| byte = v }
+  paths = opt.parse(ARGV)
+  if !line && !word && !byte
+    [ paths, { line: true, word: true, byte: true} ]
+  else
+    [ paths, { line:, word:, byte:, paths: } ]
   end
 end
 
