@@ -3,20 +3,20 @@
 require 'optparse'
 
 def main
-  options, paths = options_and_paths
-  text_metadata_collection =
+  column_names, paths = column_names_and_paths
+  statistics_matrix =
     if paths.empty?
-      [create_text_metadata(input: $stdin.read)]
+      [build_statistics_row(input: $stdin.read)]
     else
-      build_text_metadata(paths)
+      build_statistics_matrix(paths)
     end
-  width = calculate_output_width(text_metadata_collection, options)
-  text_metadata_collection.each do |text_metadata|
-    render(text_metadata, options, width)
+  width = calculate_output_width(statistics_matrix, column_names)
+  statistics_matrix.each do |statistics|
+    render(statistics, column_names, width)
   end
 end
 
-def options_and_paths
+def column_names_and_paths
   line = false
   word = false
   size = false
@@ -25,7 +25,7 @@ def options_and_paths
   opt.on('-w') { |v| word = v }
   opt.on('-c') { |v| size = v }
   paths = opt.parse(ARGV)
-  options =
+  column_names =
     if [line, word, size].none?
       %i[line_count word_count size]
     else
@@ -33,10 +33,10 @@ def options_and_paths
         option if flag
       end.compact
     end
-  [options, paths]
+  [column_names, paths]
 end
 
-def create_text_metadata(input:, name: nil)
+def build_statistics_row(input:, name: nil)
   {
     line_count: input.lines.count,
     word_count: input.split.count,
@@ -45,43 +45,43 @@ def create_text_metadata(input:, name: nil)
   }
 end
 
-def build_text_metadata(paths)
-  text_metadata_collection = paths.map do |path|
-    create_text_metadata(input: File.read(path), name: path)
+def build_statistics_matrix(paths)
+  statistics_matrix = paths.map do |path|
+    build_statistics_row( File.read(path),  path)
   end
-  if text_metadata_collection.length > 1
-    text_metadata_collection + [calculate_total(text_metadata_collection)]
+  if statistics_matrix.length > 1
+    statistics_matrix + [calculate_total(statistics_matrix)]
   else
-    text_metadata_collection
+    statistics_matrix
   end
 end
 
-def calculate_total(text_metadata_collection)
+def calculate_total(statistics_matrix)
   line_count_sum = 0
   word_count_sum = 0
   size_sum = 0
-  text_metadata_collection.each do |text_metadata|
-    line_count_sum += text_metadata[:line_count]
-    word_count_sum += text_metadata[:word_count]
-    size_sum += text_metadata[:size]
+  statistics_matrix.each do |statistics|
+    line_count_sum += statistics[:line_count]
+    word_count_sum += statistics[:word_count]
+    size_sum += statistics[:size]
   end
   { line_count: line_count_sum, word_count: word_count_sum, size: size_sum, name: 'total' }
 end
 
-def calculate_output_width(text_metadata_collection, options)
-  widths = text_metadata_collection.map do |text_metadata|
-    options.map do |option|
-      text_metadata[option].to_s.length
+def calculate_output_width(statistics_matrix, column_names)
+  widths = statistics_matrix.map do |statistics|
+    column_names.map do |column_name|
+      statistics[column_name].to_s.length
     end
   end
   widths.flatten.max
 end
 
-def render(text_metadata, options, width)
-  options.each do |option|
-    print "#{text_metadata[option].to_s.rjust(width)} "
+def render(statistics, column_names, width)
+  column_names.each do |column_name|
+    print "#{statistics[column_name].to_s.rjust(width)} "
   end
-  print text_metadata[:name]
+  print statistics[:name]
   puts ''
 end
 
