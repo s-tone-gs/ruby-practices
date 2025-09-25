@@ -25,14 +25,7 @@ def column_names_and_paths
   opt.on('-w') { |v| word = v }
   opt.on('-c') { |v| size = v }
   paths = opt.parse(ARGV)
-  column_names =
-    if [line, word, size].none?
-      %i[line_count word_count size]
-    else
-      { line_count: line, word_count: word, size: size }.map do |option, flag|
-        option if flag
-      end.compact
-    end
+  column_names = [line, word, size].none? ? %i[line_count word_count size] : { line_count: line, word_count: word, size: size }.select { |_, v| v }.keys
   [column_names, paths]
 end
 
@@ -47,13 +40,10 @@ end
 
 def build_statistics_matrix(paths)
   statistics_matrix = paths.map do |path|
-    build_statistics_row( File.read(path),  path)
+    build_statistics_row(File.read(path), path)
   end
-  if statistics_matrix.length > 1
-    statistics_matrix + [calculate_total(statistics_matrix)]
-  else
-    statistics_matrix
-  end
+  statistics_matrix << calculate_total(statistics_matrix) if paths.size > 1
+  statistics_matrix
 end
 
 def calculate_total(statistics_matrix)
@@ -78,11 +68,10 @@ def calculate_output_width(statistics_matrix, column_names)
 end
 
 def render(statistics, column_names, width)
-  column_names.each do |column_name|
-    print "#{statistics[column_name].to_s.rjust(width)} "
+  filterd_statistics = column_names.map do |column_name|
+    statistics[column_name].to_s.rjust(width)
   end
-  print statistics[:name]
-  puts ''
+  puts [*filterd_statistics, statistics[:name]].join(' ')
 end
 
 main
