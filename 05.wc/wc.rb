@@ -3,16 +3,16 @@
 require 'optparse'
 
 def main
-  paths, target_options = options_and_paths
+  options, paths = options_and_paths
   text_metadata_collection =
     if paths.empty?
       [create_text_metadata(input: $stdin.read)]
     else
       build_text_metadata(paths)
     end
-  width = calculate_output_width(text_metadata_collection, target_options)
+  width = calculate_output_width(text_metadata_collection, options)
   text_metadata_collection.each do |text_metadata|
-    render(target_options, text_metadata, width)
+    render(text_metadata, options, width)
   end
 end
 
@@ -25,7 +25,7 @@ def options_and_paths
   opt.on('-w') { |v| word = v }
   opt.on('-c') { |v| size = v }
   paths = opt.parse(ARGV)
-  target_options =
+  options =
     if [line, word, size].none?
       %i[line_count word_count size]
     else
@@ -33,7 +33,7 @@ def options_and_paths
         option if flag
       end.compact
     end
-  [paths, target_options]
+  [options, paths]
 end
 
 def create_text_metadata(input:, name: nil)
@@ -68,17 +68,17 @@ def calculate_total(text_metadata_collection)
   { line_count: line_count_sum, word_count: word_count_sum, size: size_sum, name: 'total' }
 end
 
-def calculate_output_width(text_metadata_collection, target_options)
+def calculate_output_width(text_metadata_collection, options)
   widths = text_metadata_collection.map do |text_metadata|
-    target_options.map do |option|
+    options.map do |option|
       text_metadata[option].to_s.length
     end
   end
   widths.flatten.max
 end
 
-def render(target_options, text_metadata, width)
-  target_options.each do |option|
+def render(text_metadata, options, width)
+  options.each do |option|
     print "#{text_metadata[option].to_s.rjust(width)} "
   end
   print text_metadata[:name]
