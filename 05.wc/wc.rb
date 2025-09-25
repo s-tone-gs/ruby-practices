@@ -6,7 +6,7 @@ def main
   column_names, paths = column_names_and_paths
   statistics_matrix =
     if paths.empty?
-      [build_statistics_row(input: $stdin.read)]
+      [build_statistics_row($stdin.read)]
     else
       build_statistics_matrix(paths)
     end
@@ -36,7 +36,7 @@ def column_names_and_paths
   [column_names, paths]
 end
 
-def build_statistics_row(input:, name: nil)
+def build_statistics_row(input, name = nil)
   {
     line_count: input.lines.count,
     word_count: input.split.count,
