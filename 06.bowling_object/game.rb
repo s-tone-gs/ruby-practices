@@ -23,7 +23,7 @@ class Game
   end
 
   def total_score
-    @frames.sum { |frame| frame.total_score }
+    @frames.sum(&:total_score)
   end
 
   private
@@ -31,7 +31,7 @@ class Game
   def parse_scores(row_scores)
     scores = []
     row_scores.split(',').each do |score|
-      scores.length < 18 && score == 'X' ? scores.push('X','0') : scores << score
+      scores.length < 18 && score == 'X' ? scores.push('X', '0') : scores << score
     end
     tenth_frame_scores = scores[18...scores.count]
     framed_scores = scores[0..17].each_slice(2).to_a
