@@ -3,6 +3,7 @@
 require_relative 'frame'
 
 class Game
+  ONE_TO_NICE_FRAMES_SHOTS_COUNT = 2 * 9
   def initialize(row_scores)
     framed_scores = parse_scores(row_scores)
     # Frameクラス内のfirst_shot, second_shotとは命名の法則が異なっており統一感は無いが、
@@ -30,10 +31,10 @@ class Game
   def parse_scores(row_scores)
     scores = []
     row_scores.split(',').each do |score|
-      scores.length < 18 && score == 'X' ? scores.push('X', '0') : scores << score
+      scores.length < ONE_TO_NICE_FRAMES_SHOTS_COUNT && score == 'X' ? scores.push('X', '0') : scores << score
     end
-    tenth_frame_scores = scores[18...scores.count]
-    framed_scores = scores[0..17].each_slice(2).to_a
+    tenth_frame_scores = scores[ONE_TO_NICE_FRAMES_SHOTS_COUNT...scores.count]
+    framed_scores = scores.take(ONE_TO_NICE_FRAMES_SHOTS_COUNT).each_slice(2).to_a
     framed_scores << tenth_frame_scores
   end
 end
