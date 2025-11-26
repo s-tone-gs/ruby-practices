@@ -18,9 +18,9 @@ class Game
     total_score = 0
     @frames.each_with_index do |frame, index|
       # 10フレーム目の場合nil
-      next_frame = !(index.equal?(9)) ? @frames[index + 1] : nil
+      next_frame = !index.equal?(9) ? @frames[index + 1] : nil
       # 9, 10フレーム目の場合nil
-      after_the_next_frame = !(index.equal?(8) || index.equal?(9)) ? @frames[index + 2] :nil
+      after_the_next_frame = !(index.equal?(8) || index.equal?(9)) ? @frames[index + 2] : nil
       total_score += frame.total_score(next_frame, after_the_next_frame)
     end
     total_score
