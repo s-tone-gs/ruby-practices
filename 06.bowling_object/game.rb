@@ -11,19 +11,18 @@ class Game
     @frames = framed_scores.map do |score|
       Frame.new(*score)
     end
-    @frames.each_with_index do |frame, index|
-      # 9フレーム目であれば
-      if index.equal?(8)
-        frame.referable_frames = [@frames[index + 1]]
-      else
-        # 10フレーム目以外
-        frame.referable_frames = [@frames[index + 1], @frames[index + 2]] unless index.equal?(9)
-      end
-    end
   end
 
   def total_score
-    @frames.sum(&:total_score)
+    total_score = 0
+    @frames.each_with_index do |frame, index|
+      # 10フレーム目の場合nil
+      next_frame = !(index.equal?(9)) ? @frames[index + 1] : nil
+      # 9, 10フレーム目の場合nil
+      after_the_next_frame = !(index.equal?(8) || index.equal?(9)) ? @frames[index + 2] :nil
+      total_score += frame.total_score(next_frame, after_the_next_frame)
+    end
+    total_score
   end
 
   private
