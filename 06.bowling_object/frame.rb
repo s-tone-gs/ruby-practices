@@ -14,20 +14,24 @@ class Frame
   def total_score(next_frame, after_the_next_frame)
     return [@first_shot.score, @second_shot.score, @third_shot.score].sum unless @third_shot.nil?
 
-    total_score = [@first_shot.score, @second_shot.score].sum
+    total_score = total_score_first_and_second
     total_score += strike_bounus(next_frame, after_the_next_frame) if strike?
     total_score += spare_bounus(next_frame) if spare?
     total_score
   end
 
+  def total_score_first_and_second
+    [@first_shot, @second_shot].map(&:score).sum
+  end
+
   def strike_bounus(next_frame, after_the_next_frame)
     if next_frame.strike?
       # 9フレーム目の場合
-      return next_frame.first_shot.score + next_frame.second_shot.score if after_the_next_frame.nil?
+      return next_frame.total_score_first_and_second if after_the_next_frame.nil?
 
       next_frame.first_shot.score + after_the_next_frame.first_shot.score
     else
-      next_frame.first_shot.score + next_frame.second_shot.score
+      next_frame.total_score_first_and_second
     end
   end
 
