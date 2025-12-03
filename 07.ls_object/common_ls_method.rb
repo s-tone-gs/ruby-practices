@@ -3,7 +3,7 @@
 module CommonLsMethod
   private
 
-  def sort_to_matrix(row_count, column_count, files)
+  def build_matrix(row_count, column_count, files)
     (0...row_count).map do |i|
       index_to_row_value = i
       (0...column_count).map do

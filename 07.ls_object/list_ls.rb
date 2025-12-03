@@ -7,7 +7,7 @@ class ListLs < Ls
   include CommonLsMethod
   def initialize(files)
     super(files)
-    @matrixed_files = sort_to_matrix(@row_count, column_count, files)
+    @matrixed_files = build_matrix(@row_count, column_count, files)
     # rubyは１ブロックを512バイト、Linuxは１ブロックを1024で計算しているため、２で割っている
     @total_block_size = files.map { |file| file.blocks.div(2) }.sum
     @widths = calc_widths(files)

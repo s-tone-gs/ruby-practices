@@ -7,7 +7,7 @@ class DefaultLs < Ls
   include CommonLsMethod
   def initialize(files)
     super(files)
-    @matrixed_files = sort_to_matrix(@row_count, column_count, files)
+    @matrixed_files = build_matrix(@row_count, column_count, files)
     @name_width = files.map { |file| file.name.length }.max + 1
   end
 
