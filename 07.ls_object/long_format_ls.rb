@@ -3,7 +3,7 @@
 require_relative 'ls_class'
 require_relative 'common_ls_method'
 
-class ListLs < Ls
+class LongFormatLs < Ls
   include CommonLsMethod
   def initialize(files)
     super(files)

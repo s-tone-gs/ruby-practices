@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require_relative '../ls_class'
 require_relative '../get_files'
 require_relative '../default_ls'
-require_relative '../list_ls'
+require_relative '../long_format_ls'
 
 class LsTest < Minitest::Test
   def test_default
@@ -62,7 +62,7 @@ class LsTest < Minitest::Test
     all = false
     reverse = false
     files = get_files(all, reverse)
-    ls_content = ListLs.generate(files)
+    ls_content = LongFormatLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -97,7 +97,7 @@ class LsTest < Minitest::Test
     all = true
     reverse = false
     files = get_files(all, reverse)
-    ls_content = ListLs.generate(files)
+    ls_content = LongFormatLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -117,7 +117,7 @@ class LsTest < Minitest::Test
     all = false
     reverse = true
     files = get_files(all, reverse)
-    ls_content = ListLs.generate(files)
+    ls_content = LongFormatLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -139,7 +139,7 @@ class LsTest < Minitest::Test
     all = true
     reverse = true
     files = get_files(all, reverse)
-    ls_content = ListLs.generate(files)
+    ls_content = LongFormatLs.generate(files)
     assert_equal expected, ls_content
   end
 end
