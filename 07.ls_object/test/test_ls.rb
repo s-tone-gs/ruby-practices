@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../ls_class'
 require_relative '../get_files'
-require_relative '../default_ls'
+require_relative '../multi_column_ls'
 require_relative '../long_format_ls'
 
 class LsTest < Minitest::Test
@@ -16,7 +16,7 @@ class LsTest < Minitest::Test
     all = false
     reverse = false
     files = get_files(all, reverse)
-    ls_content = DefaultLs.generate(files)
+    ls_content = MultiColumnLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -29,7 +29,7 @@ class LsTest < Minitest::Test
     all = true
     reverse = false
     files = get_files(all, reverse)
-    ls_content = DefaultLs.generate(files)
+    ls_content = MultiColumnLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -42,7 +42,7 @@ class LsTest < Minitest::Test
     all = false
     reverse = true
     files = get_files(all, reverse)
-    ls_content = DefaultLs.generate(files)
+    ls_content = MultiColumnLs.generate(files)
     assert_equal expected, ls_content
   end
 
@@ -75,7 +75,7 @@ class LsTest < Minitest::Test
     all = true
     reverse = true
     files = get_files(all, reverse)
-    ls_content = DefaultLs.generate(files)
+    ls_content = MultiColumnLs.generate(files)
     assert_equal expected, ls_content
   end
 

@@ -2,7 +2,7 @@
 
 require_relative 'ls_class'
 
-class DefaultLs < Ls
+class MultiColumnLs < Ls
   COLUMN_COUNT = 3
   def initialize(files)
     name_width = files.map { |file| file.name.length }.max
