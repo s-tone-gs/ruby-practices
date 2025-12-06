@@ -32,9 +32,8 @@ class ListLs < Ls
       file.group.name.rjust(widths[:group]),
       file.size.rjust(widths[:size]),
       file.mtime.rjust(widths[:mtime]),
-      ' ',
       file.name
-    ].join
+    ].join(' ')
   end
 
   def column_count
@@ -51,6 +50,6 @@ class ListLs < Ls
       widths[:mtime].push(f.mtime.length)
       widths[:name].push(f.name.length)
     end
-    widths.transform_values { |widths| widths.max + 1 }
+    widths.transform_values { |widths| widths.max }
   end
 end

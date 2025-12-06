@@ -8,7 +8,7 @@ class DefaultLs < Ls
   def initialize(files)
     super(files)
     @matrixed_files = build_matrix(@row_count, column_count, files)
-    @name_width = files.map { |file| file.name.length }.max + 1
+    @name_width = files.map { |file| file.name.length }.max
   end
 
   def generate

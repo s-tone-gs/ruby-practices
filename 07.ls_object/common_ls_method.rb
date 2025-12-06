@@ -23,6 +23,6 @@ module CommonLsMethod
   def generate_row(files, width)
     files.map do |file|
       files.last.equal?(file) ? file.name : file.name.ljust(width)
-    end.join
+    end.join(' ')
   end
 end
