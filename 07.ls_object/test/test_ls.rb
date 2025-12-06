@@ -36,7 +36,7 @@ class LsTest < Minitest::Test
   def test_reverse
     expected = <<~LIST.chomp
       test_ls.rb file_d.txt file_a.txt
-      file_f.txt file_c.txt abc.txt
+      file_f.txt file_c.txt abc.txt#{'   '}
       file_e.txt file_b.txt
     LIST
     all = false
@@ -69,8 +69,8 @@ class LsTest < Minitest::Test
   def test_all_reverse
     expected = <<~LIST.chomp
       test_ls.rb file_d.txt file_a.txt
-      file_f.txt file_c.txt abc.txt
-      file_e.txt file_b.txt .
+      file_f.txt file_c.txt abc.txt#{'   '}
+      file_e.txt file_b.txt .#{'         '}
     LIST
     all = true
     reverse = true

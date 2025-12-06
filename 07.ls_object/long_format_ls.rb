@@ -1,43 +1,35 @@
 # frozen_string_literal: true
 
 require_relative 'ls_class'
-require_relative 'common_ls_method'
 
 class LongFormatLs < Ls
-  include CommonLsMethod
+  COLUMN_COUNT = 1
   def initialize(files)
-    super(files)
-    @matrixed_files = build_matrix(@row_count, column_count, files)
+    content_widths = calc_widths(files)
+    super(files, COLUMN_COUNT, content_widths)
     # rubyは１ブロックを512バイト、Linuxは１ブロックを1024で計算しているため、２で割っている
     @total_block_size = files.map { |file| file.blocks.div(2) }.sum
-    @widths = calc_widths(files)
   end
 
   def generate
     [
       "total #{@total_block_size}",
-      generate_rows(@matrixed_files, @widths)
+      generate_rows(@matrixed_files)
     ].join("\n")
   end
 
   private
 
-  def generate_row(files, widths)
-    # -lオプションが有効な時は必ず一列になるため、このように取得する
-    file = files[0]
+  def generate_content(file)
     [
       file.str_mode,
-      file.nlink.to_s.rjust(widths[:nlink]),
-      file.owner.name.rjust(widths[:owner]),
-      file.group.name.rjust(widths[:group]),
-      file.size.rjust(widths[:size]),
-      file.mtime.rjust(widths[:mtime]),
+      file.nlink.to_s.rjust(@content_widths[:nlink]),
+      file.owner.name.rjust(@content_widths[:owner]),
+      file.group.name.rjust(@content_widths[:group]),
+      file.size.rjust(@content_widths[:size]),
+      file.mtime.rjust(@content_widths[:mtime]),
       file.name
     ].join(' ')
-  end
-
-  def column_count
-    1
   end
 
   def calc_widths(files)

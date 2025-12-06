@@ -1,21 +1,16 @@
 # frozen_string_literal: true
 
 require_relative 'ls_class'
-require_relative 'common_ls_method'
 
 class DefaultLs < Ls
-  include CommonLsMethod
+  COLUMN_COUNT = 3
   def initialize(files)
-    super(files)
-    @matrixed_files = build_matrix(@row_count, column_count, files)
-    @name_width = files.map { |file| file.name.length }.max
+    name_width = files.map { |file| file.name.length }.max
+    content_widths = { name: name_width }
+    super(files, COLUMN_COUNT, content_widths)
   end
 
-  def column_count
-    3
-  end
-
-  def generate
-    generate_rows(@matrixed_files, @name_width)
+  def generate_content(file)
+    file.name.ljust(@content_widths[:name])
   end
 end
