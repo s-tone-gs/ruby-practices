@@ -11,6 +11,10 @@ class DefaultLs < Ls
     @name_width = files.map { |file| file.name.length }.max
   end
 
+  def column_count
+    3
+  end
+
   def generate
     generate_rows(@matrixed_files, @name_width)
   end

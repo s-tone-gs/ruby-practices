@@ -14,7 +14,7 @@ class Ls
   private
 
   def column_count
-    3
+    raise NotImplementedError
   end
 
   def generate
