@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
-require 'optparse'
-require_relative 'get_files'
-require_relative 'multi_column_ls'
-require_relative 'long_format_ls'
+require_relative 'input_builder'
+require_relative 'file'
+require_relative 'directory_content_output'
 
-opt = OptionParser.new
-all = false
-reverse = false
-long_format = false
-opt.on('-a') { |v| all = v }
-opt.on('-r') { |v| reverse = v }
-opt.on('-l') { |v| long_format = v }
-opt.parse(ARGV)
+class Ls
+  def self.run
+    files_and_option = InputBuilder.build
+    DirectoryContentOutput.run(*files_and_option)
+  end
+end
 
-files = get_files(all, reverse)
-puts long_format ? LongFormatLs.generate(files) : MultiColumnLs.generate(files)
+Ls.run

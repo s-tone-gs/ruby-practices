@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../ls_class'
-require_relative '../get_files'
-require_relative '../multi_column_ls'
-require_relative '../long_format_ls'
+require_relative '../file'
+require_relative '../directory_content_output'
 
 class LsTest < Minitest::Test
   def test_default
@@ -15,8 +13,10 @@ class LsTest < Minitest::Test
     LIST
     all = false
     reverse = false
-    files = get_files(all, reverse)
-    ls_content = MultiColumnLs.generate(files)
+    long_format = false
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
@@ -28,8 +28,10 @@ class LsTest < Minitest::Test
     LIST
     all = true
     reverse = false
-    files = get_files(all, reverse)
-    ls_content = MultiColumnLs.generate(files)
+    long_format = false
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
@@ -41,13 +43,15 @@ class LsTest < Minitest::Test
     LIST
     all = false
     reverse = true
-    files = get_files(all, reverse)
-    ls_content = MultiColumnLs.generate(files)
+    long_format = false
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
-  def test_list
-    file = My::File.new('test_ls.rb')
+  def test_long_format
+    file = FileMetadata.new('test_ls.rb')
     expected = <<~LIST.chomp
       total 20
       -rw-r--r-- 1 s-tone s-tone 3001 Dec 03 14:54 abc.txt
@@ -61,8 +65,10 @@ class LsTest < Minitest::Test
     LIST
     all = false
     reverse = false
-    files = get_files(all, reverse)
-    ls_content = LongFormatLs.generate(files)
+    long_format = true
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
@@ -74,14 +80,16 @@ class LsTest < Minitest::Test
     LIST
     all = true
     reverse = true
-    files = get_files(all, reverse)
-    ls_content = MultiColumnLs.generate(files)
+    long_format = false
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
-  def test_all_list
-    file = My::File.new('test_ls.rb')
-    current_directory = My::File.new('.')
+  def test_all_long_format
+    file = FileMetadata.new('test_ls.rb')
+    current_directory = FileMetadata.new('.')
     expected = <<~LIST.chomp
       total 24
       drwxr-xr-x 2 s-tone s-tone #{current_directory.size} #{current_directory.mtime} .
@@ -96,13 +104,15 @@ class LsTest < Minitest::Test
     LIST
     all = true
     reverse = false
-    files = get_files(all, reverse)
-    ls_content = LongFormatLs.generate(files)
+    long_format = true
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
-  def test_reverse_list
-    file = My::File.new('test_ls.rb')
+  def test_reverse_long_format
+    file = FileMetadata.new('test_ls.rb')
     expected = <<~LIST.chomp
       total 20
       -rw-r--r-- 1 s-tone s-tone #{file.size} #{file.mtime} test_ls.rb
@@ -116,14 +126,16 @@ class LsTest < Minitest::Test
     LIST
     all = false
     reverse = true
-    files = get_files(all, reverse)
-    ls_content = LongFormatLs.generate(files)
+    long_format = true
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 
-  def test_reverse_list_all
-    file = My::File.new('test_ls.rb')
-    current_directory = My::File.new('.')
+  def test_reverse_liong_format_all
+    file = FileMetadata.new('test_ls.rb')
+    current_directory = FileMetadata.new('.')
     expected = <<~LIST.chomp
       total 24
       -rw-r--r-- 1 s-tone s-tone #{file.size} #{file.mtime} test_ls.rb
@@ -138,8 +150,10 @@ class LsTest < Minitest::Test
     LIST
     all = true
     reverse = true
-    files = get_files(all, reverse)
-    ls_content = LongFormatLs.generate(files)
+    long_format = true
+    files = FileMetadata.get_files(all, reverse)
+    output = DirectoryContentOutput.new(files, long_format)
+    ls_content = output.generate
     assert_equal expected, ls_content
   end
 end
