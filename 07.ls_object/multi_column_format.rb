@@ -12,7 +12,7 @@ class MultiColumnFormat
   def initialize(files)
     @files = files
   end
-  
+
   def build_matrix
     (0...row_count).map do |i|
       index_to_row_value = i
@@ -39,7 +39,6 @@ class MultiColumnFormat
   def row_count
     @files.count.ceildiv(COLUMN_COUNT)
   end
-
 
   def generate_row(files)
     files.map do |file|
