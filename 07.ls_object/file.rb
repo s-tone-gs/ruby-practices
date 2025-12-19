@@ -31,37 +31,37 @@ class FileMetadata
 
   def initialize(name)
     @name = name
-    @state = ::File.stat(name)
+    @stat = ::File.stat(name)
   end
 
   def str_mode
-    int_mode = @state.mode.to_s(8).rjust(6, '0')
+    int_mode = @stat.mode.to_s(8).rjust(6, '0')
     FILE_TYPES[int_mode[0..1]] + int_mode[3..5].chars.map { |mode| PERMISSIONS[mode] }.join
   end
 
   def nlink
-    @state.nlink
+    @stat.nlink
   end
 
   def owner
-    uid = @state.uid
+    uid = @stat.uid
     Etc.getpwuid(uid)
   end
 
   def group
-    gid = @state.gid
+    gid = @stat.gid
     Etc.getgrgid(gid)
   end
 
   def size
-    @state.size.to_s
+    @stat.size.to_s
   end
 
   def blocks
-    @state.blocks
+    @stat.blocks
   end
 
   def mtime
-    @state.mtime.strftime('%b %d %H:%M').to_s
+    @stat.mtime.strftime('%b %d %H:%M').to_s
   end
 end
