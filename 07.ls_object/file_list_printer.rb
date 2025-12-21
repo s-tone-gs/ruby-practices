@@ -3,7 +3,7 @@
 require_relative 'multi_column_format'
 require_relative 'long_format'
 
-class DirectoryContentOutput
+class FileListPrinter
   def self.run(files, long_format)
     directory_content_output = new(files, long_format)
     puts directory_content_output.generate

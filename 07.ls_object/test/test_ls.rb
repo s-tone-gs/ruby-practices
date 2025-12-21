@@ -2,7 +2,7 @@
 
 require 'minitest/autorun'
 require_relative '../file'
-require_relative '../directory_content_output'
+require_relative '../file_list_printer'
 
 class LsTest < Minitest::Test
   def test_default
@@ -15,7 +15,7 @@ class LsTest < Minitest::Test
     reverse = false
     long_format = false
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -30,7 +30,7 @@ class LsTest < Minitest::Test
     reverse = false
     long_format = false
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -45,7 +45,7 @@ class LsTest < Minitest::Test
     reverse = true
     long_format = false
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -67,7 +67,7 @@ class LsTest < Minitest::Test
     reverse = false
     long_format = true
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -82,7 +82,7 @@ class LsTest < Minitest::Test
     reverse = true
     long_format = false
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -106,7 +106,7 @@ class LsTest < Minitest::Test
     reverse = false
     long_format = true
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -128,7 +128,7 @@ class LsTest < Minitest::Test
     reverse = true
     long_format = true
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
@@ -152,7 +152,7 @@ class LsTest < Minitest::Test
     reverse = true
     long_format = true
     files = FileMetadata.get_files(all, reverse)
-    output = DirectoryContentOutput.new(files, long_format)
+    output = FileListPrinter.new(files, long_format)
     ls_content = output.generate
     assert_equal expected, ls_content
   end
