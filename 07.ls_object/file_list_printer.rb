@@ -5,8 +5,8 @@ require_relative 'long_format'
 
 class FileListPrinter
   def self.run(files, long_format)
-    directory_content_output = new(files, long_format)
-    puts directory_content_output.generate
+    file_list_printer = new(files, long_format)
+    puts file_list_printer.generate
   end
 
   def initialize(files, long_format)
