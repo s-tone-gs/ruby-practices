@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'command_line_options'
-require_relative 'file'
+require_relative 'file_metadata'
 require_relative 'file_list_printer'
 
 class Ls
